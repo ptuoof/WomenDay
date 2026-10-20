@@ -531,6 +531,38 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
   margin-top: 3px;
 }
 
+
+.mail-3d-box {
+  position: relative;
+  display: block;
+  width: clamp(124px, 28vw, 156px);
+  height: clamp(86px, 20vw, 112px);
+  margin: 0 auto 4px;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(.2,.8,.2,1), filter 0.25s ease;
+  will-change: transform;
+  filter: drop-shadow(0 8px 18px rgba(180, 50, 90, 0.22));
+}
+.mail-3d-box canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  pointer-events: none;
+}
+.envelope-button:hover .mail-3d-box {
+  transform: scale(1.08) translateY(-3px);
+  filter: drop-shadow(0 12px 24px rgba(180, 50, 90, 0.32));
+}
+.envelope-button:active .mail-3d-box {
+  transform: scale(0.95);
+}
+@media (max-width: 600px) {
+  .mail-3d-box {
+    width: 114px;
+    height: 82px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

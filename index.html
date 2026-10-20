@@ -11,9 +11,12 @@
   <meta name="description" content="Một bó hoa và tấm thiệp nhỏ, gửi những lời chúc dịu dàng nhân ngày Phụ nữ Việt Nam 20/10.">
   <title>Một bó hoa dành tặng bạn · 20/10</title>
   <link rel="stylesheet" href="./style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="./script.js" defer></script>
   <script src="./card.js" defer></script>
   <script src="./album.js" defer></script>
+  <script src="./mail-3d.js" defer></script>
 </head>
 <body>
   <main>
@@ -36,13 +39,12 @@
               aria-describedby="bouquetHint">
               <canvas id="bouquetCanvas" aria-hidden="true"></canvas>
             </div>
-            <a class="envelope-button romantic-card" id="openCard" href="./mail.html" role="button" aria-label="Bức thư 3D lãng mạn - Chạm để mở">
-              <span class="envelope" aria-hidden="true">
-                <span class="envelope-letter">20 • 10</span>
-                <span class="envelope-seal">♡</span>
-              </span>
-              <span class="envelope-caption">Thiệp chúc lãng mạn</span>
-              <span class="envelope-action">Mở Thư 3D Tương Tác 💌</span>
+            <a class="envelope-button romantic-card" id="openCard" href="./garden.html" role="button" aria-label="Bức thư 3D lãng mạn - Chạm để vào Vườn hoa">
+              <div class="mail-3d-box" id="mail3dBox" aria-hidden="true">
+                <canvas id="mail3dCanvas"></canvas>
+              </div>
+              <span class="envelope-caption">Thư 3D lãng mạn</span>
+              <span class="envelope-action">Bước vào Vườn hoa ❀</span>
             </a>
           </div>
 
@@ -53,8 +55,7 @@
           <p id="roseWish" class="rose-wish" role="status" aria-live="polite" aria-atomic="true"></p>
           <div class="footer-actions">
             <button class="text-button" id="replayBloom" type="button">Cho hoa nở lại <span aria-hidden="true">↻</span></button>
-            <a href="./mail.html" class="text-button">Bức Thư 3D 💌</a>
-            <a href="./garden.html" class="text-button">Vườn Hoa ❀</a>
+            <a href="./garden.html" class="text-button">Đến Vườn Hoa thứ 2 ❀</a>
             <button class="text-button" id="openLetterDialog" type="button" aria-haspopup="dialog" aria-controls="greetingCard">Đọc thư chúc ✉</button>
           </div>
         </footer>
@@ -71,15 +72,10 @@
             <p id="cardMessage" class="letter-message"></p>
             <div class="letter-signoff"><p>Với thật nhiều thương mến,</p><p id="cardSender" class="letter-signature"></p></div>
             <div class="garden-jump-box">
-              <p class="garden-jump-text">🌸 Trải nghiệm Bức Thư 3D dễ thương & Vườn Hoa nở rộ...</p>
-              <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                <a href="./mail.html" class="primary-button garden-jump-btn" style="background: linear-gradient(135deg, #e45880 0%, #ba2952 100%);">
-                  <span>Mở Bức Thư 3D 💌</span>
-                </a>
-                <a href="./garden.html" class="primary-button garden-jump-btn">
-                  <span>Vào Vườn Hoa ❀</span>
-                </a>
-              </div>
+              <p class="garden-jump-text">🌸 Dành tặng bạn, cả một vườn hoa đang nở rực rỡ...</p>
+              <a href="./garden.html" class="primary-button garden-jump-btn">
+                <span>Chuyển sang Trang Vườn Hoa thứ 2 ❀</span>
+              </a>
             </div>
             <div class="letter-fold" aria-hidden="true"></div>
             <div class="letter-actions"><button id="viewAlbum" class="text-button" type="button" aria-controls="memoryAlbum">Xem album kỷ niệm <span aria-hidden="true">♡</span></button><button id="editCard" class="text-button" type="button">Viết lời chúc riêng <span aria-hidden="true">✎</span></button></div>

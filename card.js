@@ -184,15 +184,18 @@
       return;
     }
     event.preventDefault();
+    if (typeof window.__triggerMail3DOpen === 'function') {
+      window.__triggerMail3DOpen();
+    }
     if (typeof spawnPetalBurst === 'function') {
       spawnPetalBurst(window.innerWidth / 2, window.innerHeight / 2, 22);
     }
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try { navigator.vibrate(15); } catch (_) {}
+      try { navigator.vibrate(20); } catch (_) {}
     }
     setTimeout(() => {
       window.location.href = './garden.html';
-    }, 380);
+    }, 450);
   });
   closeButton.addEventListener('click', () => setCardOpen(false));
   document.addEventListener('keydown', event => {
