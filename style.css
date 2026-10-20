@@ -12,10 +12,24 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 html, body { margin: 0; min-width: 320px; min-height: 100%; }
 body {
   background: radial-gradient(ellipse at 50% 46%, #fffdfd 0%, #fff9fa 47%, #fcecf1 100%);
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.letter-message, .letter-recipient, .letter-signature, .rose-wish, input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+button:active, .garden-link:active {
+  transform: scale(0.97);
 }
 button, input, textarea { font: inherit; }
 button { color: inherit; cursor: pointer; touch-action: manipulation; }
@@ -231,21 +245,240 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
   body.card-open .bouquet-composition { width: min(100%, var(--bouquet-size)); }
 }
 @media (max-width: 600px) {
-  .occasion { font-size: 12px; margin-bottom: 8px; }
-  .greeting { margin-bottom: 6px; }
-  .greeting-caption { font-size: 12px; margin-top: 8px; }
+  :root {
+    --bouquet-size: clamp(210px, min(84vw, calc(100dvh - 290px)), 380px);
+  }
+  main {
+    padding: max(54px, calc(env(safe-area-inset-top) + 48px)) clamp(14px, 3.5vw, 24px) max(16px, env(safe-area-inset-bottom));
+  }
+  .garden-link {
+    top: max(12px, env(safe-area-inset-top));
+    right: max(14px, env(safe-area-inset-right));
+    min-height: 38px;
+    padding: 7px 14px;
+    font-size: 12px;
+    border-radius: 20px;
+    gap: 6px;
+  }
+  .garden-link span { font-size: 16px; }
+  .greeting { margin-bottom: 4px; }
+  .occasion { font-size: 11.5px; margin-bottom: 6px; }
+  h1 { font-size: clamp(24px, 6.2vw, 32px); line-height: 1.15; letter-spacing: -0.8px; }
+  .greeting-caption { font-size: 13px; margin-top: 6px; }
   .gift-visuals { margin-top: 2px; }
-  .bouquet-composition { margin-top: 0; margin-bottom: 4px; width: min(100%, var(--bouquet-size)); }
-  .envelope-button { right: 6px; top: 68%; width: 130px; }
-  .envelope { width: 88px; height: 60px; margin-bottom: 9px; }
-  .envelope-seal { top: 22px; }
-  .envelope-caption { font-size: 10px; }
-  .envelope-action { font-size: 12px; }
-  .rose-wish { font-size: 16px; padding: 0 10px; }
-  .letter-paper { padding: 18px 24px 10px; }
-  .letter-fold { margin-left: -24px; margin-right: -24px; }
-  #cardTitle { font-size: 29px; }
-  .memory-album.is-spread .album-photos { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .bouquet-composition {
+    margin-top: -6px;
+    margin-bottom: 2px;
+    width: min(100%, var(--bouquet-size));
+  }
+  .envelope-button {
+    right: 4px;
+    top: 65%;
+    width: clamp(114px, 34%, 130px);
+    touch-action: manipulation;
+  }
+  .envelope {
+    width: 82px;
+    height: 56px;
+    margin-bottom: 6px;
+    border-radius: 2px 2px 4px 4px;
+  }
+  .envelope-letter {
+    font-size: 11.5px;
+    padding-top: 10px;
+  }
+  .envelope-seal {
+    top: 20px;
+    width: 22px;
+    height: 22px;
+    font-size: 16px;
+    line-height: 22px;
+    left: calc(50% - 11px);
+  }
+  .envelope-caption { font-size: 10px; line-height: 1.35; }
+  .envelope-action {
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-top: 2px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: rgba(255, 240, 245, 0.85);
+    display: inline-block;
+  }
+  .envelope-button:active {
+    transform: rotate(-7deg) scale(0.96);
+  }
+  .scene-footer { margin-top: 4px; }
+  .bouquet-hint { font-size: 11.5px; }
+  .rose-wish {
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 0 8px;
+    min-height: 46px;
+    margin: 4px auto 2px;
+  }
+  .text-button {
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 12px;
+    touch-action: manipulation;
+  }
+  .card-dialog {
+    width: 100%;
+    margin-top: 16px;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(118, 54, 77, 0.15), 0 2px 8px rgba(118, 54, 77, 0.08);
+  }
+  .letter-paper {
+    padding: 22px 18px 16px;
+    border-radius: 12px;
+  }
+  .letter-paper::before {
+    inset: 8px;
+  }
+  .close-button {
+    top: 10px;
+    right: 10px;
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    touch-action: manipulation;
+  }
+  .close-button:active {
+    background: #f7e0e8;
+  }
+  .letter-date {
+    font-size: 24px;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .date-stem {
+    height: 26px;
+  }
+  .letter-recipient {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+  #cardTitle {
+    font-size: clamp(23px, 6vw, 27px);
+    line-height: 1.25;
+  }
+  .letter-message {
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .letter-signature {
+    font-size: 20px;
+  }
+  .letter-fold {
+    margin-left: -18px;
+    margin-right: -18px;
+  }
+  .letter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    margin-top: 12px;
+  }
+  .letter-actions .text-button {
+    width: 100%;
+    max-width: 280px;
+    min-height: 44px;
+    padding: 10px 16px;
+    background: rgba(252, 236, 241, 0.55);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .letter-actions .text-button:active {
+    background: #fae0ea;
+  }
+  #cardEditor input,
+  #cardEditor textarea {
+    font-size: 16px !important;
+    padding: 12px 14px;
+    border-radius: 8px;
+  }
+  #cardEditor textarea {
+    min-height: 130px;
+  }
+  .editor-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .editor-actions .primary-button {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 20px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .editor-actions .text-button {
+    min-height: 44px;
+  }
+  .memory-album {
+    margin: 28px auto 16px;
+    padding-inline: 8px;
+  }
+  #albumTitle {
+    font-size: 24px;
+  }
+  .album-photos {
+    padding: 12px 8px;
+    gap: 24px;
+  }
+  .album-card {
+    width: min(100%, 260px);
+  }
+  .photo-actions {
+    gap: 8px;
+  }
+  .photo-actions .text-button {
+    min-height: 44px;
+    padding: 8px 14px;
+    background: #fff8fa;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  .memory-album.is-spread .album-photos {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+  main {
+    padding: max(42px, env(safe-area-inset-top)) clamp(14px, 3vw, 24px) max(14px, env(safe-area-inset-bottom));
+  }
+  .garden-link {
+    top: max(8px, env(safe-area-inset-top));
+    min-height: 34px;
+    padding: 5px 12px;
+    font-size: 11.5px;
+  }
+  .occasion { margin-bottom: 2px; font-size: 11px; }
+  h1 { font-size: 20px; }
+  .greeting-caption { display: none; }
+  .bouquet-composition {
+    --bouquet-size: clamp(160px, 52vh, 230px);
+  }
+  .envelope-button {
+    width: 110px;
+    top: 58%;
+  }
+  .rose-wish {
+    min-height: 36px;
+    font-size: 13px;
+  }
 }
 @keyframes bouquet-entrance { from { opacity: 0; transform: translateY(18px) scale(.92); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes envelope-arrival { from { opacity: 0; transform: translateY(14px) rotate(-12deg); } to { opacity: 1; transform: translateY(0) rotate(-7deg); } }

@@ -1791,8 +1791,14 @@ function setupInteractions() {
     const y = (event.clientY - rect.top) * stageH / rect.height;
     const baseScale = Math.min(stageW, stageH) / 650;
     // The frontmost visible flower owns the tap where petals overlap.
-    const rose = [...roseNodes].reverse().find(node => Math.hypot(x - node.screenX, y - node.screenY) < node.hitRadius);
-    if (rose) announceRose(rose);
+    const touchBoost = (typeof window !== 'undefined' && 'ontouchstart' in window) ? 1.25 : 1.0;
+    const rose = [...roseNodes].reverse().find(node => Math.hypot(x - node.screenX, y - node.screenY) < node.hitRadius * touchBoost);
+    if (rose) {
+      announceRose(rose);
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate(12); } catch (_) {}
+      }
+    }
     const localX = (x - stageW * 0.5) / baseScale;
     const localY = (y - stageH * 0.51) / baseScale;
     triggerBouquetBloomWave(localX, localY, 'ripple');

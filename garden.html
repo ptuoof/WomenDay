@@ -2,8 +2,12 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#bbdff5">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Vườn Hoa 20/10">
   <meta name="description" content="Chạm một bông hoa, đánh thức cả khu vườn và nhận một lời chúc dịu dàng ngày 20/10.">
   <title>Cả một vườn thương · 20/10</title>
   <link rel="preload" href="./assets/fonts/noto-serif-regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -55,10 +59,31 @@
     }
     .garden.is-growing::after { opacity: 1; }
     .page-header {
-      position: absolute; top: max(28px, env(safe-area-inset-top));
-      left: clamp(24px, 5vw, 76px); right: clamp(24px, 5vw, 76px);
-      display: flex; align-items: start; justify-content: space-between; gap: 24px;
+      position: absolute; top: max(24px, env(safe-area-inset-top));
+      left: clamp(20px, 4vw, 76px); right: clamp(20px, 4vw, 76px);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
       pointer-events: none;
+    }
+    .garden-back-button {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 40px;
+      padding: 8px 16px;
+      border: 1px solid #dcb9c8;
+      border-radius: 20px;
+      background: rgba(255, 253, 252, 0.92);
+      color: var(--ink);
+      font-size: 13px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(118, 54, 77, 0.08);
+      transition: background 0.2s, transform 0.2s;
+      touch-action: manipulation;
+    }
+    .garden-back-button:active {
+      transform: scale(0.96);
+      background: #fae7ef;
     }
     .dedication { margin: 0; font: italic 20px/1.6 var(--font-letter); }
     .date { margin: 0; text-align: right; font-size: 11px; line-height: 1.7; color: var(--muted); }
@@ -137,12 +162,51 @@
     .noscript { position: absolute; top: 30%; left: 20px; right: 20px; text-align: center; line-height: 1.8; }
     @keyframes unfold { from { opacity: 0; transform: translateY(35px) rotate(-2deg) scale(.94); } to { opacity: 1; transform: none; } }
     @media (max-width: 600px) {
-      .dedication { font-size: 18px; max-width: 150px; }
-      .date { max-width: 130px; font-size: 10px; }
-      .date span { font-size: 25px; }
-      .letter { padding: 35px 26px 25px; }
-      .intro { top: 18%; }
-      h1 { font-size: clamp(23px, 5.8vw, 28px); }
+      .page-header {
+        top: max(12px, env(safe-area-inset-top));
+        left: 12px; right: 12px;
+        gap: 8px;
+        align-items: center;
+      }
+      .garden-back-button {
+        min-height: 36px;
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 18px;
+      }
+      .dedication { font-size: 14.5px; max-width: 125px; line-height: 1.35; }
+      .date { max-width: 105px; font-size: 9.5px; }
+      .date span { font-size: 19px; margin-bottom: 2px; }
+      .intro { top: 22%; left: 16px; right: 16px; }
+      h1 { font-size: clamp(21px, 5.5vw, 26px); }
+      .intro p { margin-top: 8px; font-size: 12.5px; }
+      .flower-button { width: 160px; height: 160px; }
+      .letter { padding: 32px 20px 22px; }
+      .card-editor input, .card-editor textarea {
+        font-size: 16px !important;
+      }
+      .close-card {
+        top: 10px; right: 10px;
+        width: 44px; height: 44px;
+        touch-action: manipulation;
+      }
+      .close-card:active {
+        background: #f7e0e8;
+        border-radius: 50%;
+      }
+      .garden-actions {
+        bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+        gap: 8px;
+      }
+      .garden-actions button {
+        min-height: 44px;
+        padding: 12px 20px;
+        font-size: 13px;
+        touch-action: manipulation;
+      }
+      .garden-actions button:active {
+        transform: scale(0.96);
+      }
     }
     @media (max-height: 600px) and (min-width: 600px) {
       .garden { min-height: 360px; }
@@ -159,6 +223,9 @@
 <body>
   <main class="garden" id="garden">
     <header class="page-header">
+      <a class="garden-back-button" href="./index.html" aria-label="Quay lại bó hoa">
+        <span aria-hidden="true">‹</span> Bó hoa
+      </a>
       <p class="dedication">Dành bạn, cả một vườn thương.</p>
       <p class="date"><span>20 / 10</span>Ngày Phụ nữ Việt Nam</p>
     </header>
