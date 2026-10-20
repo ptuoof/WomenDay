@@ -101,7 +101,7 @@
         showReading();
       }
       openButton.setAttribute('aria-expanded', String(open));
-      const actionEl = openButton.querySelector('.envelope-action'); if (actionEl && !open) actionEl.textContent = 'Bước vào Vườn hoa ❀';
+      const actionEl = openButton.querySelector('.envelope-action'); if (actionEl && !open) actionEl.textContent = 'Mở Thư 3D Tương Tác 💌';
     });
     if (open) {
       closeButton.focus({ preventScroll: true });
