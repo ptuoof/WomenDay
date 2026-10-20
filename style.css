@@ -34,8 +34,14 @@ main {
   display: inline-flex; align-items: center; gap: 8px;
   min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 24px;
   background: var(--paper); color: var(--ink); font-size: 13px; text-decoration: none;
+  box-shadow: 0 2px 10px rgba(118, 54, 77, 0.06);
+  transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
 }
-.garden-link:hover { background: #fae7ef; }
+.garden-link:hover {
+  background: #fae7ef;
+  transform: translateY(-1.5px);
+  box-shadow: 0 5px 16px rgba(118, 54, 77, 0.12);
+}
 .garden-link span { color: var(--rose); font-size: 20px; line-height: 1; }
 .gift-layout {
   width: min(100%, 1040px); margin-inline: auto;
@@ -80,6 +86,7 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
   position: relative; width: 100%; aspect-ratio: 1; border-radius: 45%;
   cursor: pointer; touch-action: manipulation;
   animation: bouquet-entrance 1.15s cubic-bezier(.16, 1, .3, 1) both;
+  will-change: transform;
 }
 #bouquetCanvas { width: 100%; height: 100%; display: block; }
 .envelope-button {
@@ -91,6 +98,8 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
   position: relative; display: block; width: 106px; height: 72px; margin: 0 auto 12px;
   background: #f5d9e2; border: 1px solid #e3b5c4; border-radius: 2px 2px 5px 5px;
   box-shadow: 0 8px 18px #76364d18;
+  animation: envelope-gentle-breathe 4.2s ease-in-out infinite 0.8s;
+  will-change: transform;
 }
 .envelope::before {
   content: ''; position: absolute; inset: 0; z-index: 2;
@@ -112,7 +121,13 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
 .envelope-seal {
   position: absolute; left: calc(50% - 12px); top: 28px; z-index: 4;
   width: 24px; height: 24px; border-radius: 50%; background: #b85575;
-  color: #fff6f8; font: 19px/24px Georgia, serif; box-shadow: 0 2px 3px #76364d22;
+  color: #fff6f8; font: 19px/24px Georgia, serif;
+  box-shadow: 0 2px 5px #76364d26, 0 0 10px rgba(220, 95, 130, 0.28);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.envelope-button:hover .envelope-seal {
+  transform: scale(1.08);
+  box-shadow: 0 3px 8px #76364d33, 0 0 16px rgba(220, 95, 130, 0.45);
 }
 .envelope-caption, .envelope-action { display: block; font-size: 11px; line-height: 1.5; }
 .envelope-caption { color: var(--muted); }
@@ -129,7 +144,7 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
 .text-button { border: 0; background: transparent; padding: 12px 8px; font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
 .text-button span { display: inline-block; margin-left: 4px; text-decoration: none; }
 #replayBloom { margin-top: 3px; }
-#ambientPetalsCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 2; }
+#ambientPetalsCanvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 2; will-change: transform; }
 .card-dialog {
   position: relative; z-index: 3; inset: auto; justify-self: center; align-self: start;
   width: min(100%, 620px); min-width: 0; max-width: none; max-height: none; margin: 0;
@@ -236,6 +251,10 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
 @keyframes envelope-arrival { from { opacity: 0; transform: translateY(14px) rotate(-12deg); } to { opacity: 1; transform: translateY(0) rotate(-7deg); } }
 @keyframes letter-open { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes wish-arrival { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes envelope-gentle-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3.5px); }
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

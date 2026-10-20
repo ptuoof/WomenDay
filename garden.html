@@ -347,6 +347,31 @@
       }
       flowers.sort((a, b) => a.depth - b.depth);
       const petals = Array.from({ length: 18 }, () => ({ x: random(), y: random(), phase: random() * TAU, size: 3 + random() * 4, speed: 9 + random() * 12 }));
+      // Pre-baked falling petal sprite to eliminate 18 gradient creations per frame
+      const gardenPetalCanvas = document.createElement('canvas');
+      gardenPetalCanvas.width = 64; gardenPetalCanvas.height = 64;
+      const gpCtx = gardenPetalCanvas.getContext('2d');
+      gpCtx.translate(32, 32);
+      const gpGrad = gpCtx.createLinearGradient(0, -28, 0, 28);
+      gpGrad.addColorStop(0, '#fff3f7'); gpGrad.addColorStop(1, '#d887a6');
+      gpCtx.fillStyle = gpGrad;
+      gpCtx.beginPath(); gpCtx.moveTo(0, -28);
+      gpCtx.bezierCurveTo(28 * 1.3, -28, 28 * .8, 28 * .8, 0, 28);
+      gpCtx.bezierCurveTo(-28, 28 * .2, -28 * .6, -28 * .9, 0, -28);
+      gpCtx.fill();
+
+      // Master cached vertical stem gradient to eliminate 140+ gradient allocations per frame
+      let cachedStemGrad = null;
+      let cachedStemH = 0;
+      function getStemGradient(context, h) {
+        if (cachedStemGrad && cachedStemH === h) return cachedStemGrad;
+        cachedStemGrad = context.createLinearGradient(0, h * 1.05, 0, h * 0.35);
+        cachedStemGrad.addColorStop(0, '#46664c');
+        cachedStemGrad.addColorStop(0.5, '#789265');
+        cachedStemGrad.addColorStop(1, '#587b53');
+        cachedStemH = h;
+        return cachedStemGrad;
+      }
       const hero = { x: .5, y: .46, radius: 76, stem: .25, bend: 5, phase: 0, rotation: -.15, tilt: .95, offsetX: 0, offsetY: 0, hover: 0 };
       const pointer = { x: -1000, y: -1000 };
       let width = 0, height = 0, scale = 1, frame = 0, lastFrame = 0;
@@ -385,9 +410,7 @@
         const controlX2 = headX + 8 * scale + sway * .12;
         const controlY2 = headY + (root - headY) * .22;
         ctx.save(); ctx.globalAlpha = isHero ? 1 : Math.min(1, f.alpha) * clamp(growth * 3);
-        const stemColor = ctx.createLinearGradient(baseX - 2, root, headX + 2, headY);
-        stemColor.addColorStop(0, '#46664c'); stemColor.addColorStop(.5, '#789265'); stemColor.addColorStop(1, '#587b53');
-        ctx.strokeStyle = stemColor;
+        ctx.strokeStyle = getStemGradient(ctx, height);
         ctx.lineWidth = isHero ? 2.8 * scale : Math.max(1, r * .05);
         ctx.lineCap = 'round';
         ctx.beginPath(); ctx.moveTo(baseX, root);
@@ -442,12 +465,8 @@
           ctx.save(); ctx.globalAlpha = Math.min(elapsed / 3, 1) * .55;
           ctx.translate(x, y); ctx.rotate(petal.phase + time * .0007);
           ctx.scale(.55 + Math.abs(Math.sin(time * .001 + petal.phase)) * .45, 1);
-          const color = ctx.createLinearGradient(0, -petal.size, 0, petal.size);
-          color.addColorStop(0, '#fff3f7'); color.addColorStop(1, '#d887a6'); ctx.fillStyle = color;
-          ctx.beginPath(); ctx.moveTo(0, -petal.size);
-          ctx.bezierCurveTo(petal.size * 1.3, -petal.size, petal.size * .8, petal.size * .8, 0, petal.size);
-          ctx.bezierCurveTo(-petal.size, petal.size * .2, -petal.size * .6, -petal.size * .9, 0, -petal.size);
-          ctx.fill(); ctx.restore();
+          ctx.drawImage(gardenPetalCanvas, -petal.size, -petal.size, petal.size * 2, petal.size * 2);
+          ctx.restore();
         });
         ctx.restore();
       }
@@ -495,12 +514,21 @@
         cancelAnimationFrame(frame);
         if (!document.hidden) frame = requestAnimationFrame(draw);
       }
-      garden.addEventListener('pointermove', event => {
-        if (event.pointerType !== 'mouse' || motion.matches) return;
+      function updatePointer(clientX, clientY) {
         const rect = garden.getBoundingClientRect();
-        pointer.x = event.clientX - rect.left; pointer.y = event.clientY - rect.top;
-      });
-      garden.addEventListener('pointerleave', () => { pointer.x = pointer.y = -1000; });
+        pointer.x = clientX - rect.left; pointer.y = clientY - rect.top;
+      }
+      garden.addEventListener('pointermove', event => {
+        if (motion.matches) return;
+        updatePointer(event.clientX, event.clientY);
+      }, { passive: true });
+      garden.addEventListener('pointerdown', event => {
+        if (motion.matches) return;
+        updatePointer(event.clientX, event.clientY);
+      }, { passive: true });
+      garden.addEventListener('pointerleave', () => { pointer.x = pointer.y = -1000; }, { passive: true });
+      garden.addEventListener('pointerup', () => { pointer.x = pointer.y = -1000; }, { passive: true });
+      garden.addEventListener('pointercancel', () => { pointer.x = pointer.y = -1000; }, { passive: true });
       function resize() {
         const rect = garden.getBoundingClientRect();
         width = rect.width; height = rect.height;
