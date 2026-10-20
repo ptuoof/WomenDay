@@ -215,22 +215,24 @@
     showReading();
   });
 
-  editButton.addEventListener('click', () => {
-    Object.keys(inputs).forEach(key => {
-      inputs[key].value = greeting[key];
-      inputs[key].setCustomValidity('');
+  if (editButton) {
+    editButton.addEventListener('click', () => {
+      Object.keys(inputs).forEach(key => {
+        inputs[key].value = greeting[key];
+        inputs[key].setCustomValidity('');
+      });
+      reading.hidden = true;
+      editor.hidden = false;
+      status.textContent = '';
+      dialog.setAttribute('aria-labelledby', 'editorTitle');
+      dialog.scrollTop = 0;
+      inputs.recipient.focus({ preventScroll: true });
+      revealCard();
     });
-    reading.hidden = true;
-    editor.hidden = false;
-    status.textContent = '';
-    dialog.setAttribute('aria-labelledby', 'editorTitle');
-    dialog.scrollTop = 0;
-    inputs.recipient.focus({ preventScroll: true });
-    revealCard();
-  });
+  }
   document.getElementById('cancelEdit').addEventListener('click', () => {
     showReading();
-    editButton.focus({ preventScroll: true });
+    if (editButton) editButton.focus({ preventScroll: true });
     revealCard();
   });
   Object.values(inputs).forEach(input => {

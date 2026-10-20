@@ -93,11 +93,7 @@
       position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
       width: 184px; height: 184px; border: 0; border-radius: 50%; background: transparent;
     }
-    .flower-button::after {
-      content: ""; position: absolute; inset: 8px; border: 1px solid #d69ab23b; border-radius: 50%;
-      transition: transform .5s, border-color .5s;
-    }
-    .flower-button:hover::after { transform: scale(1.13); border-color: #c6638888; }
+
     .intro {
       position: absolute; left: 24px; right: 24px; top: 19%; text-align: center;
       transition: opacity .65s, transform .65s; pointer-events: none;
@@ -264,7 +260,6 @@
           <p class="signature" id="cardSignature">Gửi bạn thật nhiều thương mến ♡</p>
           <div class="letter-actions">
             <button class="view-garden" id="viewGarden" type="button" autofocus>Ngắm vườn hoa</button>
-            <button class="view-garden" id="editCard" type="button">Viết lời chúc riêng</button>
           </div>
         </div>
         <form class="card-editor" id="cardEditor" hidden>

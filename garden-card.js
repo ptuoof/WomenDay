@@ -59,21 +59,23 @@
     card.scrollTop = 0;
   }
 
-  editButton.addEventListener('click', () => {
-    Object.entries(inputs).forEach(([key, input]) => {
-      input.value = greeting[key];
-      input.setCustomValidity('');
+  if (editButton) {
+    editButton.addEventListener('click', () => {
+      Object.entries(inputs).forEach(([key, input]) => {
+        input.value = greeting[key];
+        input.setCustomValidity('');
+      });
+      reading.hidden = true;
+      editor.hidden = false;
+      status.textContent = '';
+      card.setAttribute('aria-labelledby', 'editorTitle');
+      card.scrollTop = 0;
+      inputs.recipient.focus({ preventScroll: true });
     });
-    reading.hidden = true;
-    editor.hidden = false;
-    status.textContent = '';
-    card.setAttribute('aria-labelledby', 'editorTitle');
-    card.scrollTop = 0;
-    inputs.recipient.focus({ preventScroll: true });
-  });
+  }
   document.getElementById('cancelEdit').addEventListener('click', () => {
     showReading();
-    editButton.focus({ preventScroll: true });
+    if (editButton) editButton.focus({ preventScroll: true });
   });
   card.addEventListener('close', () => {
     showReading();
