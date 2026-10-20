@@ -168,10 +168,13 @@
     void wish.offsetWidth;
     wish.classList.add('is-new');
   });
-  document.getElementById('replayBloom').addEventListener('click', () => {
-    document.dispatchEvent(new Event('bouquet:replay'));
-    document.getElementById('roseWish').textContent = '';
-  });
+  const replayBloomBtn = document.getElementById('replayBloom');
+  if (replayBloomBtn) {
+    replayBloomBtn.addEventListener('click', () => {
+      document.dispatchEvent(new Event('bouquet:replay'));
+      document.getElementById('roseWish').textContent = '';
+    });
+  }
 
   const openLetterDialog = document.getElementById('openLetterDialog');
   if (openLetterDialog) {

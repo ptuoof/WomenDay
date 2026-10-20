@@ -106,6 +106,7 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
 .envelope-button {
   position: absolute; right: 8px; top: 66%; width: clamp(126px, 29%, 164px);
   padding: 0; border: 0; background: transparent; text-align: center;
+  color: var(--ink); text-decoration: none;
   transform: rotate(-7deg); animation: envelope-arrival .8s cubic-bezier(.2,.8,.2,1) both;
 }
 .envelope {
@@ -145,7 +146,7 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
 }
 .envelope-caption, .envelope-action { display: block; font-size: 11px; line-height: 1.5; }
 .envelope-caption { color: var(--muted); }
-.envelope-action { font-size: 13px; text-decoration: underline; text-underline-offset: 4px; margin-top: 3px; }
+.envelope-action { font-size: 13px; color: #b82d54; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; margin-top: 3px; }
 @media (hover: hover) {
   .envelope-button:hover .envelope-letter { transform: translateY(-7px); }
   .envelope-button:hover .envelope::after { transform: rotateX(35deg); }
