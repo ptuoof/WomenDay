@@ -488,6 +488,49 @@ h1 { margin: 0; font-size: clamp(28px, 3.4vw, 42px); line-height: 1.08; letter-s
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3.5px); }
 }
+
+.garden-jump-box {
+  margin: 16px 0 12px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(255, 240, 246, 0.75), rgba(254, 248, 250, 0.9));
+  border: 1px solid #ebd0db;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(118, 54, 77, 0.05);
+}
+.garden-jump-text {
+  margin: 0 0 10px;
+  font: italic 14px/1.5 Georgia, serif;
+  color: var(--ink);
+}
+.garden-jump-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #c44569 0%, #9e2445 100%);
+  color: #fffdfb;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13.5px;
+  box-shadow: 0 4px 14px rgba(168, 46, 80, 0.28);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.garden-jump-btn:active {
+  transform: scale(0.96);
+}
+.footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

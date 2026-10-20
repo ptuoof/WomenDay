@@ -615,6 +615,92 @@ function drawBotanicalLeaf(ctx, x, y, angle, length, width, type = 'roseLeaf') {
 }
 
 /**
+ * Pre-renders a delicate cloud sprig of White Gypsophila (Hoa Baby) & Pink Waxflower
+ */
+function createBabyBreathClusterSprite(seed = 1) {
+  const dpr = Math.min(window.devicePixelRatio || 2, 2.5);
+  const size = 150;
+  const canvas = document.createElement('canvas');
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const rand = createSeededRandom(seed);
+  const cx = size * 0.5;
+  const cy = size * 0.82;
+
+  // Delicate airy branching stems
+  const branches = 7;
+  const blossomPoints = [];
+
+  for (let b = 0; b < branches; b++) {
+    const bAngle = -Math.PI * 0.5 + (b - (branches - 1) / 2) * 0.26 + (rand() - 0.5) * 0.12;
+    const bLen = 48 + rand() * 46;
+    const ex = cx + Math.cos(bAngle) * bLen;
+    const ey = cy + Math.sin(bAngle) * bLen;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.quadraticCurveTo(
+      (cx + ex) * 0.5 + (rand() - 0.5) * 14,
+      (cy + ey) * 0.5,
+      ex, ey
+    );
+    ctx.strokeStyle = 'rgba(115, 148, 122, 0.55)';
+    ctx.lineWidth = 1.1;
+    ctx.stroke();
+
+    blossomPoints.push({ x: ex, y: ey, r: 5.2 + rand() * 2.5, isPink: rand() > 0.72 });
+
+    // Sub-twigs
+    for (let t = 0; t < 2; t++) {
+      const tAngle = bAngle + (t === 0 ? -0.35 : 0.35) + (rand() - 0.5) * 0.15;
+      const tLen = 16 + rand() * 18;
+      const tx = (cx + ex) * 0.55 + Math.cos(tAngle) * tLen;
+      const ty = (cy + ey) * 0.55 + Math.sin(tAngle) * tLen;
+
+      ctx.beginPath();
+      ctx.moveTo((cx + ex) * 0.55, (cy + ey) * 0.55);
+      ctx.lineTo(tx, ty);
+      ctx.lineWidth = 0.75;
+      ctx.stroke();
+
+      blossomPoints.push({ x: tx, y: ty, r: 4.0 + rand() * 2.2, isPink: rand() > 0.78 });
+    }
+  }
+
+  // Draw tiny multi-petal gypsophila / waxflower blossoms
+  blossomPoints.forEach(pt => {
+    ctx.save();
+    ctx.translate(pt.x, pt.y);
+    ctx.shadowColor = 'rgba(95, 45, 65, 0.18)';
+    ctx.shadowBlur = 4;
+
+    const petals = 5;
+    for (let p = 0; p < petals; p++) {
+      const pa = (p / petals) * Math.PI * 2 + rand() * 0.3;
+      const px = Math.cos(pa) * (pt.r * 0.58);
+      const py = Math.sin(pa) * (pt.r * 0.58);
+      ctx.beginPath();
+      ctx.arc(px, py, pt.r * 0.52, 0, Math.PI * 2);
+      ctx.fillStyle = pt.isPink ? '#FCE0E8' : '#FFFDFB';
+      ctx.fill();
+    }
+
+    // Tiny warm center
+    ctx.beginPath();
+    ctx.arc(0, 0, pt.r * 0.28, 0, Math.PI * 2);
+    ctx.fillStyle = pt.isPink ? '#D96B8A' : '#F3DCA2';
+    ctx.fill();
+    ctx.restore();
+  });
+
+  return { canvas, size };
+}
+
+
+/**
  * Pre-rendered back wrapping paper & soft tissue lining
  * Eliminates 5 heavy shadowBlur passes and 5 gradient creations per frame
  */
@@ -1029,6 +1115,78 @@ function drawWrappingPaperFrontAndRibbon(ctx, cx, cy, scale, time) {
   ctx.restore(); // end scale/translate
 }
 
+// Define the complete arrangement of 25 roses (back layer, mid dome, hero front blooms, and outer buds)
+const BOUQUET_LAYOUT = [
+  // TIER 1: Upper & Outer Halo Rosebuds & Arching Blooms (Back Depth)
+  { x: -128, y: -165, r: 44, paletteKey: 'pastelPink', variety: 'bud', tiltX: -0.35, tiltY: -0.35, z: 1, seed: 11 },
+  { x: -62,  y: -192, r: 48, paletteKey: 'creamPeach', variety: 'classic', tiltX: -0.18, tiltY: -0.4, z: 1, seed: 12 },
+  { x: 8,    y: -202, r: 50, paletteKey: 'sweetBlush', variety: 'garden', tiltX: 0.02, tiltY: -0.42, z: 1, seed: 13 },
+  { x: 76,   y: -188, r: 47, paletteKey: 'pastelPink', variety: 'classic', tiltX: 0.22, tiltY: -0.38, z: 1, seed: 14 },
+  { x: 134,  y: -158, r: 44, paletteKey: 'pearlVintage', variety: 'bud', tiltX: 0.38, tiltY: -0.32, z: 1, seed: 15 },
+  { x: -172, y: -98,  r: 45, paletteKey: 'sweetBlush', variety: 'bud', tiltX: -0.45, tiltY: -0.15, z: 1, seed: 16 },
+  { x: 174,  y: -92,  r: 45, paletteKey: 'creamPeach', variety: 'bud', tiltX: 0.45, tiltY: -0.15, z: 1, seed: 17 },
+
+  // TIER 2: Lush Mid-Dome Roses (Creating full volume and rich shadow pockets)
+  { x: -115, y: -112, r: 56, paletteKey: 'pearlVintage', variety: 'garden', tiltX: -0.26, tiltY: -0.22, z: 2, seed: 21, hasDewdrop: true },
+  { x: -38,  y: -138, r: 60, paletteKey: 'berryRomance', variety: 'peony', tiltX: -0.1, tiltY: -0.24, z: 2, seed: 22 },
+  { x: 44,   y: -135, r: 58, paletteKey: 'creamPeach', variety: 'garden', tiltX: 0.12, tiltY: -0.24, z: 2, seed: 23, hasDewdrop: true },
+  { x: 118,  y: -108, r: 56, paletteKey: 'sweetBlush', variety: 'classic', tiltX: 0.28, tiltY: -0.2, z: 2, seed: 24 },
+  { x: -150, y: -32,  r: 55, paletteKey: 'pastelPink', variety: 'classic', tiltX: -0.35, tiltY: 0.02, z: 2, seed: 25 },
+  { x: 152,  y: -28,  r: 55, paletteKey: 'pearlVintage', variety: 'garden', tiltX: 0.35, tiltY: 0.02, z: 2, seed: 26 },
+  { x: -118, y: 38,   r: 54, paletteKey: 'creamPeach', variety: 'classic', tiltX: -0.28, tiltY: 0.24, z: 2, seed: 27 },
+  { x: 120,  y: 42,   r: 54, paletteKey: 'berryRomance', variety: 'classic', tiltX: 0.28, tiltY: 0.24, z: 2, seed: 28 },
+
+  // TIER 3: Grand Hero Centerpiece Roses (Fullest, largest David Austin & French blooms)
+  { x: -78,  y: -58,  r: 65, paletteKey: 'sweetBlush', variety: 'peony', tiltX: -0.14, tiltY: -0.08, z: 3, seed: 31, hasDewdrop: true },
+  { x: 78,   y: -55,  r: 64, paletteKey: 'pastelPink', variety: 'garden', tiltX: 0.15, tiltY: -0.08, z: 3, seed: 32 },
+  { x: -58,  y: 25,   r: 63, paletteKey: 'pearlVintage', variety: 'garden', tiltX: -0.12, tiltY: 0.16, z: 3, seed: 33, hasDewdrop: true },
+  { x: 60,   y: 28,   r: 62, paletteKey: 'sweetBlush', variety: 'classic', tiltX: 0.12, tiltY: 0.16, z: 3, seed: 34, hasDewdrop: true },
+  { x: 0,    y: 48,   r: 60, paletteKey: 'creamPeach', variety: 'peony', tiltX: 0.0, tiltY: 0.22, z: 3, seed: 35 },
+
+  // TIER 4: The Crown Jewel Center Rose
+  { x: 0,    y: -78,  r: 66, paletteKey: 'creamPeach', variety: 'garden', tiltX: 0.0, tiltY: -0.12, z: 4, seed: 41, hasDewdrop: true },
+  { x: -2,   y: -10,  r: 72, paletteKey: 'sweetBlush', variety: 'peony', tiltX: 0.0, tiltY: 0.02, z: 4, seed: 42, hasDewdrop: true }
+];
+
+// Foliage & Eucalyptus Sprigs around the dome
+const FOLIAGE_LAYOUT = [
+  // Back & Upper Eucalyptus / Rose Leaves
+  { x: -145, y: -145, angle: -2.35, len: 88, w: 28, type: 'eucalyptus', layer: 'back' },
+  { x: -85,  y: -185, angle: -1.85, len: 92, w: 26, type: 'roseLeaf',   layer: 'back' },
+  { x: -10,  y: -200, angle: -1.55, len: 95, w: 28, type: 'eucalyptus', layer: 'back' },
+  { x: 75,   y: -185, angle: -1.25, len: 90, w: 26, type: 'roseLeaf',   layer: 'back' },
+  { x: 145,  y: -140, angle: -0.75, len: 88, w: 28, type: 'eucalyptus', layer: 'back' },
+  { x: -175, y: -65,  angle: -2.75, len: 85, w: 27, type: 'roseLeaf',   layer: 'back' },
+  { x: 175,  y: -60,  angle: -0.35, len: 85, w: 27, type: 'roseLeaf',   layer: 'back' },
+
+  // Foreground Collar Leaves cascading over the wrapping paper edge
+  { x: -140, y: 45,   angle: 2.55,  len: 76, w: 25, type: 'roseLeaf',   layer: 'front' },
+  { x: -85,  y: 72,   angle: 2.15,  len: 82, w: 26, type: 'eucalyptus', layer: 'front' },
+  { x: -28,  y: 82,   angle: 1.78,  len: 74, w: 24, type: 'roseLeaf',   layer: 'front' },
+  { x: 32,   y: 82,   angle: 1.35,  len: 75, w: 24, type: 'roseLeaf',   layer: 'front' },
+  { x: 88,   y: 70,   angle: 0.95,  len: 82, w: 26, type: 'eucalyptus', layer: 'front' },
+  { x: 142,  y: 42,   angle: 0.55,  len: 76, w: 25, type: 'roseLeaf',   layer: 'front' }
+];
+
+// Gypsophila (Hoa Baby Trắng) Clusters tucked around and inside the bouquet
+const BABY_BREATH_LAYOUT = [
+  { x: -158, y: -142, angle: -0.65, scale: 0.92, layer: 'back', seed: 101 },
+  { x: -35,  y: -208, angle: -0.12, scale: 0.96, layer: 'back', seed: 102 },
+  { x: 48,   y: -204, angle: 0.18,  scale: 0.94, layer: 'back', seed: 103 },
+  { x: 162,  y: -135, angle: 0.68,  scale: 0.92, layer: 'back', seed: 104 },
+  { x: -188, y: -42,  angle: -1.05, scale: 0.88, layer: 'back', seed: 105 },
+  { x: 190,  y: -38,  angle: 1.05,  scale: 0.88, layer: 'back', seed: 106 },
+
+  // Foreground airy baby's breath tucked between hero roses
+  { x: -102, y: -82,  angle: -0.45, scale: 0.72, layer: 'front', seed: 201 },
+  { x: 104,  y: -78,  angle: 0.45,  scale: 0.72, layer: 'front', seed: 202 },
+  { x: -125, y: 18,   angle: -0.85, scale: 0.78, layer: 'front', seed: 203 },
+  { x: 128,  y: 22,   angle: 0.85,  scale: 0.78, layer: 'front', seed: 204 },
+  { x: -45,  y: 68,   angle: -0.25, scale: 0.75, layer: 'front', seed: 205 },
+  { x: 48,   y: 68,   angle: 0.25,  scale: 0.75, layer: 'front', seed: 206 }
+];
+
+
 const bouquetCanvas = document.getElementById('bouquetCanvas');
 const bCtx = bouquetCanvas.getContext('2d');
 const bouquetWrapper = document.getElementById('bouquetStageWrapper');
@@ -1080,6 +1238,25 @@ function spawnShockwave(worldX, worldY, maxRadius = 260) {
     vR: 7.5,
     alpha: 0.8
   });
+}
+
+function requestSceneRender() {
+  if (sceneAnimationFrame === null && !document.hidden) {
+    sceneAnimationFrame = requestAnimationFrame(renderBouquetScene);
+  }
+}
+
+function clearBloomTimers() {
+  bloomTimers.forEach(clearTimeout);
+  bloomTimers.clear();
+}
+
+function scheduleBloom(callback, delay) {
+  const timer = setTimeout(() => {
+    bloomTimers.delete(timer);
+    if (!reducedMotion && !document.hidden) callback();
+  }, delay);
+  bloomTimers.add(timer);
 }
 
 function settleBouquet() {
@@ -1136,6 +1313,45 @@ function initBotanicalAssets() {
   backBabySprites = babySprites.filter(b => b.layer === 'back');
   frontBabySprites = babySprites.filter(b => b.layer === 'front');
 }
+
+function triggerBouquetBloomWave(originX = 0, originY = -30, mode = 'grand') {
+  clearBloomTimers();
+  nextAutoShowcaseTime = performance.now() + 11000;
+  if (reducedMotion) {
+    settleBouquet();
+    requestSceneRender();
+    return;
+  }
+  roseNodes.forEach(rose => {
+    const distance = Math.hypot(rose.x - originX, rose.y - originY);
+    const delay = mode === 'grand' ? distance * 2.1 + (4 - rose.z) * 65 : distance * 1.4;
+    if (mode === 'grand') {
+      rose.bloom = rose.targetBloom = 0.04;
+      rose.vBloom = 0;
+      rose.scaleOffset = 0.78;
+    } else {
+      scheduleBloom(() => {
+        rose.targetBloom = 0.48;
+        rose.vBloom = -0.06;
+      }, Math.max(0, delay - 110));
+    }
+    scheduleBloom(() => {
+      rose.targetBloom = 1.32;
+      rose.vBloom = mode === 'grand' ? 0.145 : 0.165;
+      rose.vScale += 0.11;
+      rose.flareGlow = 1;
+      if (mode === 'grand' ? rose.z >= 3 : Math.random() > 0.78) {
+        const rect = bouquetCanvas.getBoundingClientRect();
+        spawnPetalBurst(rect.left + rose.screenX, rect.top + rose.screenY, mode === 'grand' ? 2 : 1);
+      }
+      scheduleBloom(() => {
+        rose.targetBloom = 1.04 + (rose.z >= 3 ? 0.04 : 0);
+      }, 520);
+    }, delay + (mode === 'ripple' ? 90 : 0));
+  });
+  requestSceneRender();
+}
+
 
 const PETAL_PALETTE_PAIRS = [
   ['#FFF0F4', '#F7A8BE'],

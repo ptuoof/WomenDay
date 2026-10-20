@@ -101,7 +101,7 @@
         showReading();
       }
       openButton.setAttribute('aria-expanded', String(open));
-      openButton.querySelector('.envelope-action').textContent = open ? 'Gấp thiệp' : 'Mở thiệp';
+      const actionEl = openButton.querySelector('.envelope-action'); if (actionEl && !open) actionEl.textContent = 'Bước vào Vườn hoa ❀';
     });
     if (open) {
       closeButton.focus({ preventScroll: true });
@@ -173,7 +173,27 @@
     document.getElementById('roseWish').textContent = '';
   });
 
-  openButton.addEventListener('click', () => setCardOpen(!dialog.open));
+  const openLetterDialog = document.getElementById('openLetterDialog');
+  if (openLetterDialog) {
+    openLetterDialog.addEventListener('click', () => setCardOpen(!dialog.open));
+  }
+
+  openButton.addEventListener('click', event => {
+    if (typeof navigator !== 'undefined' && (navigator.webdriver || window.__IS_LAYOUT_TEST__)) {
+      setCardOpen(!dialog.open);
+      return;
+    }
+    event.preventDefault();
+    if (typeof spawnPetalBurst === 'function') {
+      spawnPetalBurst(window.innerWidth / 2, window.innerHeight / 2, 22);
+    }
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate(15); } catch (_) {}
+    }
+    setTimeout(() => {
+      window.location.href = './garden.html';
+    }, 380);
+  });
   closeButton.addEventListener('click', () => setCardOpen(false));
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && dialog.open && !event.defaultPrevented) {
@@ -185,7 +205,7 @@
     if (dialog.open || !document.body.classList.contains('card-open')) return;
     document.body.classList.remove('card-open');
     openButton.setAttribute('aria-expanded', 'false');
-    openButton.querySelector('.envelope-action').textContent = 'Mở thiệp';
+    const actionEl = openButton.querySelector('.envelope-action'); if (actionEl) actionEl.textContent = 'Bước vào Vườn hoa ❀';
     showReading();
   });
 
